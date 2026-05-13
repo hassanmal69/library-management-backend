@@ -13,6 +13,8 @@ export default {
       name: 'John Doe',
       email: 'john.doe@example.com',
       password: 'hashed-password',
+      createdAt:  Date.now(),
+      updatedAt: Date.now()
     }], {});
   },
 
