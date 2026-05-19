@@ -9,15 +9,30 @@ export default {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       author: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      ibn: {
-        // unique: true,
-        type: Sequelize.STRING
+      isbn: {
+        type: Sequelize.STRING(20),
+        allowNull: false,
+        unique: true
+      },
+      publishedYear: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      },
+      quantity: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1
+      },
+      available: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,
