@@ -1,54 +1,53 @@
-import db from "../models/index.js";
+import bookService, { NotFoundError, ValidationError } from "../services/book.service.js";
 
-const { Book } = db;
+const handleError = (res, err) => {
+  if (err instanceof NotFoundError) return res.status(404).json({ success: false, message: err.message });
+  if (err instanceof ValidationError) return res.status(400).json({ success: false, message: err.message });
+  return res.status(500).json({ success: false, message: "Internal server error", error: err.message });
+};
 
 export const getAllBooks = async (req, res) => {
   try {
-    const books = await Book.findAll();
-    res.json(books);
+    const { page, limit, sortBy, order } = req.query;
+    const result = await bookService.getAllBooks({ page, limit, sortBy, order });
+    res.json({ success: true, ...result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    handleError(res, err);
   }
 };
 
 export const getBookById = async (req, res) => {
   try {
-    const book = await Book.findByPk(req.params.id);
-    if (!book) return res.status(404).json({ message: "Book not found" });
-    res.json(book);
+    const book = await bookService.getBookById(req.params.id);
+    res.json({ success: true, data: book });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    handleError(res, err);
   }
 };
 
 export const createBook = async (req, res) => {
   try {
-    const { title, author, isbn, publishedYear, quantity, available } = req.body;
-    const newBook = await Book.create({ title, author, isbn, publishedYear, quantity, available });
-    res.status(201).json(newBook);
+    const book = await bookService.createBook(req.body);
+    res.status(201).json({ success: true, data: book });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    handleError(res, err);
   }
 };
 
 export const updateBook = async (req, res) => {
   try {
-    const book = await Book.findByPk(req.params.id);
-    if (!book) return res.status(404).json({ message: "Book not found" });
-    await book.update(req.body);
-    res.json(book);
+    const book = await bookService.updateBook(req.params.id, req.body);
+    res.json({ success: true, data: book });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    handleError(res, err);
   }
 };
 
 export const deleteBook = async (req, res) => {
   try {
-    const book = await Book.findByPk(req.params.id);
-    if (!book) return res.status(404).json({ message: "Book not found" });
-    await book.destroy();
-    res.json({ message: "Book deleted successfully" });
+    const result = await bookService.deleteBook(req.params.id);
+    res.json({ success: true, ...result });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    handleError(res, err);
   }
 };
