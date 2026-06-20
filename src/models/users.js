@@ -1,17 +1,22 @@
 'use strict';
-import {Model} from 'sequelize'
+import { Model } from 'sequelize';
+
 export default (sequelize, DataTypes) => {
   class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method atomatically.
+     * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // User.hasMany(models.Book, { foreignKey: 'userId', as: 'borrowedBooks' });
-      // define association here
+      // User has many Loans (books issued)
+      User.hasMany(models.Loan, { 
+        foreignKey: 'userId', 
+        as: 'loans' 
+      });
     }
   }
+  
   User.init({
     name: {
       type: DataTypes.STRING,
@@ -56,5 +61,6 @@ export default (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
+  
   return User;
 };
