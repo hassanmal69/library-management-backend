@@ -4,6 +4,7 @@ const app = express();
 import loginRouter from './routes/login.routes.js'
 import bookRoutes from './routes/book.routes.js'
 import userRoutes from './routes/users.routes.js'
+import { authMiddleware } from "./middleware/token.middleware.js";
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -11,8 +12,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use("/api/v1/auth/login", loginRouter);
-app.use("/api/v1/books", bookRoutes)
-app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/books",authMiddleware, bookRoutes)
+app.use("/api/v1/users",authMiddleware, userRoutes);
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
