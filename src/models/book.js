@@ -4,9 +4,14 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class Book extends Model {
     static associate(models) {
-      // define associations here if needed
+      // Book has many Loans (issued books)
+      Book.hasMany(models.Loan, {
+        foreignKey: 'bookId',
+        as: 'loans'
+      });
     }
   }
+  
   Book.init({
     title: {
       type: DataTypes.STRING,
@@ -37,5 +42,6 @@ export default (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Book',
   });
+  
   return Book;
 };
