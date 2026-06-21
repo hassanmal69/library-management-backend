@@ -6,7 +6,6 @@ import bookRoutes from './routes/book.routes.js'
 import userRoutes from './routes/users.routes.js'
 import { authMiddleware } from "./middleware/token.middleware.js";
 import loanRoutes from './routes/loan.routes.js'
-
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
